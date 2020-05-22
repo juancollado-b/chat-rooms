@@ -1,7 +1,7 @@
-const app = require('../routers/chat')
+const server = require('../routers/chat')
 
 const port = process.env.PORT || 3000
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server is up on  htpp://localhost:${port}`)
 })

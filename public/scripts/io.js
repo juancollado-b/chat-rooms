@@ -20,9 +20,12 @@ document.querySelector('#location-form').addEventListener('submit', (e) => {
     }
 
     navigator.geolocation.getCurrentPosition((position) => {
+        console.log('Sending location...')
         socket.emit('sendLocation', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
+        }, () => {
+            console.log('Location shared!')
         })
     })
 })

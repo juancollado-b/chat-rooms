@@ -19,8 +19,9 @@ io.on('connection', (socket) => {
         io.emit('newMessage', ms)
     })
 
-    socket.on('sendLocation', (location) => {
+    socket.on('sendLocation', (location, cb) => {
         socket.broadcast.emit('newMessage', `https://google.com/maps?q=${location.latitude},${location.longitude}`)
+        cb()
     })
 
     socket.on('disconnect', () => {

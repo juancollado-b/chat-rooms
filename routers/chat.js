@@ -15,12 +15,13 @@ io.on('connection', (socket) => {
     socket.emit('newMessage', 'Welcome to the chat')
     socket.broadcast.emit('newMessage', 'A new user has joined!')
 
-    socket.on('clientMessage', (ms) => {
+    socket.on('clientMessage', (ms, cb) => {
         io.emit('newMessage', ms)
+        cb()
     })
 
     socket.on('sendLocation', (location, cb) => {
-        socket.broadcast.emit('newMessage', `https://google.com/maps?q=${location.latitude},${location.longitude}`)
+        io.emit('newLocationMessage', `https://google.com/maps?q=${location.latitude},${location.longitude}`)
         cb()
     })
 

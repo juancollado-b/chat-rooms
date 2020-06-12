@@ -8,15 +8,33 @@
 </head>
 <body>
     <h1>Chat</h1>
+    <section id="messages">
+        <!-- HERE RENDERED MESSAGES -->
+    </section>
     <form id="message-form">
-        <input name="message" type="text"></input>
-        <button type="submit">Send</button>
+        <input name="message" type="text" id="message-input"></input>
+        <button type="submit" id="message-button">Send</button>
     </form>
 
     <form id="location-form">
-        <button type="submit">Send Location</button>
+        <button type="submit" id="location-button">Send Location</button>
     </form>
+
+    <script id="message-template" type="text/html">
+        <div>
+            <p>{{message}}</p>
+        </div>
+    </script>
+
+    <script id="location-template" type="text/html">
+        <div>
+            <a href={{url}} target="_blank">My current location</a>
+        </div>
+    </script>
+
+
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/scripts/mustache.min.js"></script>
     <script src="/scripts/io.js"></script>
 </body>
 </html>

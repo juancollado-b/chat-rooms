@@ -1,4 +1,4 @@
-const server = require('../routers/chat')
+const server = require('./routers/chat')
 
 const port = process.env.PORT || 3000
 

@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 const http = require('http')
 const socketio = require('socket.io')
-const { generateMessage } = require('../utils/messages')
+const { generateMessage, generateLocationMessage } = require('../utils/messages')
 
 const app = express()
 const server = http.createServer(app)
@@ -11,7 +11,7 @@ const io = socketio(server)
 const publicDirectoryPath = path.join(__dirname, '../../public')
 
 app.use(express.static(publicDirectoryPath))
-console.log(generateMessage)
+
 io.on('connection', (socket) => {
     socket.emit('newMessage', generateMessage('Welcome to the chat'))
     socket.broadcast.emit('newMessage', generateMessage('A new user has joined!'))
@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sendLocation', (location, cb) => {
-        io.emit('newLocationMessage', `https://google.com/maps?q=${location.latitude},${location.longitude}`)
+        io.emit('newLocationMessage', generateLocationMessage(location))
         cb()
     })
 

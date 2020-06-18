@@ -2,21 +2,22 @@ const path = require('path')
 const express = require('express')
 const http = require('http')
 const socketio = require('socket.io')
+const { generateMessage } = require('../utils/messages')
 
 const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
-const publicDirectoryPath = path.join(__dirname, '../public')
+const publicDirectoryPath = path.join(__dirname, '../../public')
 
 app.use(express.static(publicDirectoryPath))
-
+console.log(generateMessage)
 io.on('connection', (socket) => {
-    socket.emit('newMessage', 'Welcome to the chat')
-    socket.broadcast.emit('newMessage', 'A new user has joined!')
+    socket.emit('newMessage', generateMessage('Welcome to the chat'))
+    socket.broadcast.emit('newMessage', generateMessage('A new user has joined!'))
 
     socket.on('clientMessage', (ms, cb) => {
-        io.emit('newMessage', ms)
+        io.emit('newMessage', generateMessage(ms))
         cb()
     })
 
@@ -26,7 +27,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        io.emit('newMessage', 'An user has left!')
+        io.emit('newMessage', generateMessage('An user has left!'))
     })
 })
 

@@ -1,34 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/styles/css/styles.css">
     <title>Chat</title>
 </head>
+
 <body>
-    <h1>Chat</h1>
-    <section id="messages">
-        <!-- HERE RENDERED MESSAGES -->
-    </section>
-    <form id="message-form">
-        <input name="message" type="text" id="message-input"></input>
-        <button type="submit" id="message-button">Send</button>
-    </form>
+    <div class="chat">
+        <div class="chat-sidebar">
 
-    <form id="location-form">
-        <button type="submit" id="location-button">Send Location</button>
-    </form>
-
+        </div>
+        <div class="chat-main">
+            <section id="messages" class="chat-messages">
+                <!-- HERE RENDERED MESSAGES -->
+            </section>
+            <section class="compose">
+                <form id="message-form">
+                    <input name="message" type="text" placeholder="Message" id="message-input"></input>
+                    <button type="submit" id="message-button">Send</button>
+                </form>
+        
+                <form id="location-form">
+                    <button type="submit" id="location-button">Send Location</button>
+                </form>
+            </section>
+        </div>
+    </div>
+  
+    <!-- TEMPLATES -->
     <script id="message-template" type="text/html">
-        <div>
-            <p>{{createdAt}} - {{message}}</p>
+        <div class="message">
+            <p>
+                <span class="message-name">User</span>
+                <span class="message-meta">{{createdAt}}</span>
+            </p>
+            <p>{{message}}</p>
         </div>
     </script>
 
     <script id="location-template" type="text/html">
-        <div>
-            <p>{{createdAt}} - <a href={{url}} target="_blank">My current location</a></p>
+        <div class="message">
+            <p>
+                <span class="message-name">User</span>
+                <span class="message-meta">{{createdAt}}</span>
+            </p>
+            <p><a href={{url}} target="_blank">My current location</a></p>
         </div>
     </script>
 
@@ -38,4 +59,5 @@
     <script src="/scripts/moment.min.js"></script>
     <script src="/scripts/io.js"></script>
 </body>
+
 </html>

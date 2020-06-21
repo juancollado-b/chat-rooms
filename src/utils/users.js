@@ -33,7 +33,13 @@ const removeUser = (id) => {
 
 const getUser = (id) => users.find((usr) => usr.id === id)
 
-const getUsersInRoom = (room) => users.filter((user) => user.room === room.trim().toLowerCase())
+const getUsersInRoom = (room) => {
+    if (room) {
+        room = room.trim().toLowerCase()
+        return users.filter((user) => user.room === room)
+    }
+    return {error: 'A room is required'}
+}
 
 module.exports = {
     addUser,

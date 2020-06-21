@@ -3,6 +3,7 @@ const express = require('express')
 const http = require('http')
 const socketio = require('socket.io')
 const { generateMessage, generateLocationMessage } = require('../utils/messages')
+const {addUser, removeUser, getUser} = require('../utils/users')
 
 const app = express()
 const server = http.createServer(app)
@@ -14,16 +15,28 @@ app.use(express.static(publicDirectoryPath))
 
 io.on('connection', (socket) => {
 
-    socket.on('join', ({username, room}) => {
-        socket.join(room)
+    socket.on('join', (options, cb) => {
+        const {user, error} = addUser({id: socket.id, ...options})
+
+        if (error) {
+            return cb(error)
+        }
+
+        socket.join(user.room)
         
-        socket.emit('newMessage', generateMessage('Welcome to the chat'))
-        socket.broadcast.to(room).emit('newMessage', generateMessage(`${username} has joined!`))
+        socket.emit('newMessage', generateMessage('Welcome to the chat', 'Admin'))
+        socket.broadcast.to(user.room).emit('newMessage', generateMessage(`${user.username} has joined!`,'Admin'))
+
+        cb()
     })
 
     socket.on('clientMessage', (ms, cb) => {
-        io.emit('newMessage', generateMessage(ms))
-        cb()
+        const user = getUser(socket.id)
+        if (user) {
+            io.to(user.room).emit('newMessage', generateMessage(ms, user.username))
+            cb()
+        }
+
     })
 
     socket.on('sendLocation', (location, cb) => {
@@ -32,7 +45,11 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        io.emit('newMessage', generateMessage('An user has left!'))
+        const user = removeUser(socket.id)
+
+        if (user) {
+            io.to(user.room).emit('newMessage', generateMessage(`${user.username} has left!`, 'Admin')) 
+        }
     })
 })
 

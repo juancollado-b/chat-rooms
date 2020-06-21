@@ -13,8 +13,13 @@ const publicDirectoryPath = path.join(__dirname, '../../public')
 app.use(express.static(publicDirectoryPath))
 
 io.on('connection', (socket) => {
-    socket.emit('newMessage', generateMessage('Welcome to the chat'))
-    socket.broadcast.emit('newMessage', generateMessage('A new user has joined!'))
+
+    socket.on('join', ({username, room}) => {
+        socket.join(room)
+        
+        socket.emit('newMessage', generateMessage('Welcome to the chat'))
+        socket.broadcast.to(room).emit('newMessage', generateMessage(`${username} has joined!`))
+    })
 
     socket.on('clientMessage', (ms, cb) => {
         io.emit('newMessage', generateMessage(ms))

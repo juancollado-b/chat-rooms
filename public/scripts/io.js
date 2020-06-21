@@ -1,7 +1,6 @@
 const socket = io() 
 
 // Elements
-//const $messageForm = document.querySelector('#message-form')
 const $messageFormInput = document.querySelector('#message-input')
 const $messageFormButton = document.querySelector('#message-button')
 const $locationFormButton = document.querySelector('#location-button')
@@ -10,9 +9,9 @@ const $messages = document.querySelector('#messages')
 //Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
 const locationTemplate = document.querySelector('#location-template').innerHTML
+const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 //Options
-
 const { username, room } = Qs.parse(location.search, {ignoreQueryPrefix: true})
 
 socket.on('newMessage', (message) => {
@@ -34,14 +33,21 @@ socket.on('newLocationMessage', (locationMessage) => {
     $messages.insertAdjacentHTML('beforeend', html)
 })
 
+socket.on('roomData', ({room, usersInRoom}) => {
+    const html = Mustache.render(sidebarTemplate, {
+        room,
+        usersInRoom
+    })
+
+    document.querySelector('#sidebar').innerHTML = html
+})
+
 const plus = document.querySelector('#message-form').addEventListener('submit', (e) => {
     e.preventDefault()
 
     $messageFormButton.setAttribute('disabled', 'disabled') 
     const ms = $messageFormInput.value
 
-
-    console.log('sending...');
     socket.emit('clientMessage', ms, () => {
         $messageFormInput.value = ''
         $messageFormButton.removeAttribute('disabled')
@@ -65,7 +71,6 @@ document.querySelector('#location-form').addEventListener('submit', (e) => {
             longitude: position.coords.longitude
         }, () => {
             $locationFormButton.removeAttribute('disabled')
-            console.log('Location shared!')
         })
     })
 })
